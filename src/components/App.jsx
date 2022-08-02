@@ -1,4 +1,7 @@
-import { Component } from "react"
+import { Component } from "react";
+import Searchbar from "./Searchbar";
+import s from './App.module.css';
+ 
 // import { ToastContainer } from 'react-toastify';
 
 export default class App extends Component {
@@ -18,13 +21,8 @@ export default class App extends Component {
   
   render() {
     return (
-      <div
-        style={{
-          maxWidth: 1170,
-          margin: '0 auto',
-          padding: 20
-        }}
-      >
+      <div className={s.app}>
+        <Searchbar/>
         {this.state.loading && <h1>reload...</h1>}
       {this.state.pokemon && <div>Hello</div>}
       </div>
