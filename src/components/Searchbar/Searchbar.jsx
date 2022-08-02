@@ -12,6 +12,7 @@ export default class Searchbar extends Component {
     };
     handleSubmit = event => {
         event.preventDefault();
+        this.props.onSubmit(this.state.pokemonName);
         this.setState({ pokemonName: '' });
     };
     render() {
