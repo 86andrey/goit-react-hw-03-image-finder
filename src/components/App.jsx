@@ -1,32 +1,27 @@
 import { Component } from "react";
 import Searchbar from "./Searchbar";
+import ImageInfo from "./ImageInfo";
 import s from './App.module.css';
- 
-// import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 export default class App extends Component {
   state = {
-    pokemonName: '',
-}
-  handleFormSubmit = pokemonName => {
-    console.log(pokemonName);
-    this.setState({ pokemonName });
-}
-  // componentDidMount() {
-  //   this.setState({ loading: true });
-  //   fetch('https://pixabay.com/api/?q=cat&page=1&key=27913920-68ceae66209fe678afbf6b110&image_type=photo&orientation=horizontal&per_page=12')
-  //     .then(res => res.json())
-  //     .then(pokemon => this.setState({ pokemon }))
-  //     .finally(() => this.setState({ loading: false })
-  //     );
-  // }
+    imageInfo: '',
+  };
+  
+  handleFormSubmit = imageInfo => {
+    console.log(imageInfo);
+    this.setState({ imageInfo });
+  };
   
   render() {
     return (
       <div className={s.app}>
         <Searchbar onSubmit={this.handleFormSubmit} />
+        <ImageInfo imageInfo={this.state.imageInfo}/>
         {/* {this.state.loading && <h1>reload...</h1>}
       {this.state.pokemon && <div>Hello</div>} */}
+        <ToastContainer position="top-center" theme="colored" />
       </div>
     );
   }

@@ -1,19 +1,23 @@
 import { Component } from "react";
 import s from './Searchbar.module.css';
+import { toast } from 'react-toastify';
 
 export default class Searchbar extends Component {
     state = {
-        pokemonName: '',
+        imageInfo: '',
     }
     handleNameChange = event => {
         this.setState({
-            pokemonName: event.currentTarget.value.toLowerCase()
+            imageInfo: event.currentTarget.value.toLowerCase()
         });
     };
     handleSubmit = event => {
         event.preventDefault();
-        this.props.onSubmit(this.state.pokemonName);
-        this.setState({ pokemonName: '' });
+        if (this.state.imageInfo.trim() === '') {
+           return toast.error('Введите значение');            
+        }
+        this.props.onSubmit(this.state.imageInfo);
+        this.setState({ imageInfo: '' });
     };
     render() {
         return (
@@ -26,8 +30,8 @@ export default class Searchbar extends Component {
                     <input
                         className={s.input}
                         type="text"
-                        autocomplete="off"
-                        autofocus
+                        autoComplete="off"
+                        autoFocus
                         placeholder="Search images and photos"
                         onChange={this.handleNameChange}
                     />
