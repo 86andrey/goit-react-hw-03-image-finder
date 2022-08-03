@@ -1,5 +1,7 @@
 
 import { Component } from "react";
+// import Audio from '../Loader';
+import { TailSpin } from 'react-loader-spinner';
 
 
 
@@ -35,24 +37,23 @@ export default class ImageGallery extends Component {
       return <div>Введите имя</div>
     }
     if (status === 'pending') {
-      return <div> Загружаем... </div>
+      return <TailSpin color="#00BFFF" height={180} width={180} />
     }
     if (status==='rejected') {
       return <h1>{error.message}</h1>
     }
     if (status === 'resolved') {
-      return (<>
-      <div>{image.total}</div>
+      return (
         <ul className="gallery">
-          {image.hits.map(item => (<li key={item.id}>
+          {image.hits.map(item => (<li key={item.id} className="gallery-item">
             <img
-              src={item.previewURL}
+              src={item.webformatURL}
               width="240"
               height="100"
               alt={item.tags} />
           </li>))}
         </ul>
-      </>)
+      )
     }
   }
 };
