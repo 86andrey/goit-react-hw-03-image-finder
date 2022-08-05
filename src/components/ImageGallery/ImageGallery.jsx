@@ -1,14 +1,16 @@
 
 import { Component } from "react";
-import Modal from "../Modal/Modal";
+// import Modal from "../Modal/Modal";
+import ImageGalleryItem from './ImageGalleryItem/ImageGalleryItem';
 // import Audio from '../Loader';
 import { TailSpin } from 'react-loader-spinner';
+import s from './ImageGallery.module.css';
 
 
 
 export default class ImageGallery extends Component {
     state = {
-      image: null,
+      images: null,
       error: null,
       status: 'idle',
       open: false
@@ -28,12 +30,12 @@ export default class ImageGallery extends Component {
               new Error(`Нет таких картинок c именем ${nextImage}`),
             );
       })
-          .then(image => this.setState({ image, status:'resolved' }))
+          .then(images => this.setState({ images, status:'resolved' }))
           .catch(error=>this.setState({error, status:'rejected'}))            
         }
     }
   render() {
-    const { image, error, status } = this.state;
+    const { images, error, status } = this.state;
     
     if (status === 'idle') {
       return <div>Введите имя</div>
@@ -46,19 +48,20 @@ export default class ImageGallery extends Component {
     }
     if (status === 'resolved') {
       return (<>
-        <ul className="gallery">
-          {image.hits.map(item => (
-            <li key={item.id} className="gallery-item" onClick={()=>this.setState({open:true})}>
-            <img
-              src={item.webformatURL}
-              width="240"
-              height="100"
-              alt={item.tags} />
-          </li>))}
+        <ul className={s.gallery}>
+          {images.hits.map(item => {
+            return (
+              <ImageGalleryItem
+                key={item.id}
+                picture={item}
+                // onClick={() => this.setState({ open: true })}
+              />
+            );
+          })}
         </ul>
-        <Modal
+        {/* <Modal
           onClose={() => this.setState({ open: false })}
-          open={this.state.open} />
+          open={this.state.open} /> */}
         </>
       )
     }
