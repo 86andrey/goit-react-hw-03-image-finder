@@ -1,5 +1,6 @@
 
 import { Component } from "react";
+import Modal from "../Modal/Modal";
 // import Audio from '../Loader';
 import { TailSpin } from 'react-loader-spinner';
 
@@ -10,6 +11,7 @@ export default class ImageGallery extends Component {
       image: null,
       error: null,
       status: 'idle',
+      open: false
 }
   componentDidUpdate(prevProps, prevState) {
     const prevImage = prevProps.imageInfo;
@@ -43,9 +45,10 @@ export default class ImageGallery extends Component {
       return <h1>{error.message}</h1>
     }
     if (status === 'resolved') {
-      return (
+      return (<>
         <ul className="gallery">
-          {image.hits.map(item => (<li key={item.id} className="gallery-item">
+          {image.hits.map(item => (
+            <li key={item.id} className="gallery-item" onClick={()=>this.setState({open:true})}>
             <img
               src={item.webformatURL}
               width="240"
@@ -53,6 +56,10 @@ export default class ImageGallery extends Component {
               alt={item.tags} />
           </li>))}
         </ul>
+        <Modal
+          onClose={() => this.setState({ open: false })}
+          open={this.state.open} />
+        </>
       )
     }
   }

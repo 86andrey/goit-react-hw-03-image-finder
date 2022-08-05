@@ -17,7 +17,7 @@ export default class Searchbar extends Component {
            return toast.error('Введите значение');            
         }
         this.props.onSubmit(this.state.imageInfo);
-        this.setState({ imageInfo: '' });
+        this.setState({ imageInfo: '3' });
     };
     render() {
         return (
