@@ -1,6 +1,6 @@
 
 import { Component } from "react";
-// import Modal from "../Modal/Modal";
+import Modal from "../Modal/Modal";
 import ImageGalleryItem from './ImageGalleryItem/ImageGalleryItem';
 // import Audio from '../Loader';
 import { TailSpin } from 'react-loader-spinner';
@@ -9,12 +9,18 @@ import s from './ImageGallery.module.css';
 
 
 export default class ImageGallery extends Component {
-    state = {
-      images: null,
-      error: null,
-      status: 'idle',
-      open: false
-}
+  state = {
+    images: null,
+    error: null,
+    status: 'idle',
+    showModal: false
+  };
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
+  };
+
   componentDidUpdate(prevProps, prevState) {
     const prevImage = prevProps.imageInfo;
     const nextImage = this.props.imageInfo;
@@ -35,7 +41,7 @@ export default class ImageGallery extends Component {
         }
     }
   render() {
-    const { images, error, status } = this.state;
+    const { images, error, status, showModal } = this.state;
     
     if (status === 'idle') {
       return <div>Введите имя</div>
@@ -48,20 +54,20 @@ export default class ImageGallery extends Component {
     }
     if (status === 'resolved') {
       return (<>
-        <ul className={s.gallery}>
+        <ul className={s.gallery} >
           {images.hits.map(item => {
             return (
               <ImageGalleryItem
                 key={item.id}
                 picture={item}
-                // onClick={() => this.setState({ open: true })}
               />
             );
           })}
         </ul>
-        {/* <Modal
-          onClose={() => this.setState({ open: false })}
-          open={this.state.open} /> */}
+        <button onClick={this.toggleModal}>modal</button>
+        {showModal && <Modal
+          onClose={this.toggleModal}
+        />}
         </>
       )
     }

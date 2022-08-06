@@ -4,30 +4,36 @@ import s from './Modal.module.css';
 
 const selectedModal = document.querySelector('#modal');
 
-class Modal extends Component{
+class Modal extends Component {
   
-  element = document.createElement('div');
-
   componentDidMount() {
-    selectedModal.appendChild(this.element)
-  }
+    window.addEventListener('keydown', this.handleKeyDown)
+  };
  
   componentWillUnmount() {
-  selectedModal.removeChild(this.element)
-}
+    window.removeEventListener('keydown', this.handleKeyDown)
+  };
+
+  handleKeyDown = e => {
+    if (e.code === 'Escape') {
+      this.props.onClose();
+    }
+  };
+  handleClickBackdrop = e => {
+    if (e.currentTarget === e.target) {
+    this.props.onClose();
+    }
+  };
 
   render() {
-    if (!this.props.open) {
-      return null
-    }
     return createPortal(
-      <div className={s.overlay}
-        onClick={this.props.onClose}>
+      <div className={s.overlay} onClick={this.handleClickBackdrop}>
         <div className={s.modal}>
           <img src='{largeImageURL}' alt='{tags}' />
         </div>
       </div>,
       selectedModal)
   }
-}
+};
+
 export default Modal;
