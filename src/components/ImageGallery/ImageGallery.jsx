@@ -13,12 +13,15 @@ export default class ImageGallery extends Component {
     images: null,
     error: null,
     status: 'idle',
-    showModal: false
+    showModal: false,
+    largePicture: null,
   };
-  toggleModal = () => {
+
+  toggleModal = (picture) => {
     this.setState(({ showModal }) => ({
       showModal: !showModal,
     }));
+    this.setState({ largePicture: picture });
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -41,7 +44,7 @@ export default class ImageGallery extends Component {
         }
     }
   render() {
-    const { images, error, status, showModal } = this.state;
+    const { images, error, status, showModal, largePicture } = this.state;
     
     if (status === 'idle') {
       return <div>Введите имя</div>
@@ -60,13 +63,15 @@ export default class ImageGallery extends Component {
               <ImageGalleryItem
                 key={item.id}
                 picture={item}
+                onClick={this.toggleModal}
               />
             );
           })}
         </ul>
-        <button onClick={this.toggleModal}>modal</button>
+        
         {showModal && <Modal
           onClose={this.toggleModal}
+          largePicture={largePicture}
         />}
         </>
       )
