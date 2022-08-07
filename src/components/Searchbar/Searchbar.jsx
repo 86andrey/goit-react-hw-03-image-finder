@@ -1,29 +1,34 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import s from './Searchbar.module.css';
 import { toast } from 'react-toastify';
 
 export default class Searchbar extends Component {
     state = {
-        imageInfo: '',
-    }
-    handleNameChange = event => {
-        this.setState({
-            imageInfo: event.currentTarget.value.toLowerCase()
-        });
+        imageSearch: '',
     };
+
+    handleImageChange = event => {
+        this.setState({imageSearch: event.currentTarget.value.toLowerCase() });
+    };
+
     handleSubmit = event => {
         event.preventDefault();
-        if (this.state.imageInfo.trim() === '') {
-           return toast.error('Введите значение');            
+        if (this.state.imageSearch.trim() === '') {
+           return toast.error('non name');            
         }
-        this.props.onSubmit(this.state.imageInfo);
-        this.setState({ imageInfo: '3' });
+        this.props.onSubmit(this.state.imageSearch);
+
+        this.setState({ imageSearch: '' });
     };
+
     render() {
+        const onSubmit = this.handleSubmit;
+        const pictureChange = this.handleImageChange;
+
         return (
-            <header className={s.searchbar}>
-                <form className={s.form} onSubmit={this.handleSubmit}>
-                    <button className={s.button} type="submit" >
+            <header className={s.searchbar} >
+                <form className={s.form} onSubmit={onSubmit}>
+                    <button type="submit" className={s.button}>
                         <span className={s.buttonLable}>Search</span>
                     </button>
 
@@ -33,7 +38,7 @@ export default class Searchbar extends Component {
                         autoComplete="off"
                         autoFocus
                         placeholder="Search images and photos"
-                        onChange={this.handleNameChange}
+                        onChange={pictureChange}
                     />
                 </form>
             </header>
