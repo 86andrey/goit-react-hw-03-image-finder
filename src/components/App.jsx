@@ -21,6 +21,7 @@ export default class App extends Component {
     tags: null,
     showModal: false,
     showBtn: false,
+    loaderActive: false,
   };
   
   loadMore = () => {
@@ -37,7 +38,7 @@ export default class App extends Component {
 
     if (prevImage !== nextImage || prevPage !== nextPage) {
       try {
-        this.setState({ status: 'pending' });
+        this.setState({ loaderActive: true, });
          
         const imagesData = await ImageAPI.fetchImage(nextImage, nextPage);
 
@@ -62,6 +63,8 @@ export default class App extends Component {
              }                  
       } catch (error) {
         this.setState({ error, status: 'rejected' })
+      } finally {
+        this.setState({ loaderActive: false });
       }
     }
   }
@@ -81,7 +84,7 @@ export default class App extends Component {
   };
   
   render() {
-    const { images, largePicture, tags, status, showModal, showBtn } = this.state;
+    const { images, largePicture, tags, status, showModal, showBtn, loaderActive } = this.state;
     return (
       <div className={s.app}>
         <Searchbar onSubmit={this.handleFormSubmit} />
@@ -90,19 +93,21 @@ export default class App extends Component {
             <h2 className={s.h2}>Type something...</h2>
           )}
 
-        {status === 'pending' && (
-          <Loader />)}
+        {loaderActive && (
+          <Loader />
+        )}
 
           {status === 'rejected' && (
             <h2 className={s.h2}>{'Not found...'}</h2>
           )}
 
-        {status === 'resolved' && (
-          <>
+        {status === 'resolved' && (        
           <ImageGallery images={images} openModal={this.toggleModal} />
-            {showBtn && <Button onClick={this.loadMore} />}
-          </>
         )}
+      
+        {showBtn && <Button onClick={this.loadMore} />}
+          
+        
         {showModal && (<Modal
           onClose={this.toggleModal}
           largePicture={largePicture}
