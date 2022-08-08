@@ -21,9 +21,7 @@ export default class App extends Component {
     largeImage: null,
     tags: null,
     showModal: false,
-    showBtn: true,
-    total: null,
-    totalHits: null,
+    showBtn: false,
   };
   
   async componentDidUpdate(_, prevState) {
@@ -33,33 +31,44 @@ export default class App extends Component {
     const nextPage = this.state.page;
 
     if (prevImage !== nextImage || prevPage !== nextPage) {
-      this.setState({ status: 'pending' })
-      ImageAPI.fetchImage(nextImage, nextPage)
-        .then(images => {
-          this.setState({
-            images,
-            total: images.hits.length,
-            totalHits: images.totalHits,
+      try {
+        this.setState({ status: 'pending' })
+        ImageAPI.fetchImage(nextImage, nextPage)
+          .then(imagesData => {
+            console.log(imagesData)
+            if (nextPage === 1) {
+              this.setState({
+                images: [...imagesData.hits],
+                status: 'resolved',
+                showBtn: true,
+              });
+            } else {
+              this.setState({
+                status: 'resolved',
+                showBtn: true,
+                images: [...prevState.images, ...imagesData.hits],
+              });
+            }
+    
+            if (imagesData.total === 0) {
+              this.setState({ status: 'rejected', images: [], showBtn: false });
+            }
+            if (imagesData.total > 0 && imagesData.hits.length < 12) {
+              this.setState({
+                // images: [...this.state.images, ...imagesData.hits],
+                status: 'resolved',
+                showBtn: false,
+              });
+            }
+          
+            // this.setState({
+            //   status: 'resolved',
+            //   showBtn: true,
+            // })
           })
-          if (images.hits.length === 0) {
-            this.setState({ status: 'rejected', images: [],});
-          }
-          if (images.hits.length < 12) {
-            this.setState({
-              // images: [...this.state.images, ...images.hits],
-              status: 'resolved',
-              showBtn: false,
-            });
-          }
-          else {
-            this.setState({
-              // images: [...this.state.images, ...images],
-              status: 'resolved',
-              showBtn: true,
-            })
-          }
-        })
-        .catch(error => this.setState({ error, status: 'rejected' }))
+      } catch (error) {
+        this.setState({ error, status: 'rejected' })
+      }
     }
   }
   
@@ -70,7 +79,10 @@ export default class App extends Component {
   };
 
   handleFormSubmit = imageSearch => {
-      this.setState({ imageSearch });
+    this.setState({
+      imageSearch,
+      images: [],
+    page: 1, });
   };
   
   toggleModal = (largePicture, tags) => {
@@ -86,14 +98,6 @@ export default class App extends Component {
       <div className={s.app}>
         <Searchbar onSubmit={this.handleFormSubmit} />
 
-        {showModal && (<Modal
-          onClose={this.toggleModal}
-          largePicture={largePicture}
-          tags={tags}
-        />)}
-
-        
-
           {status === 'idle' && (
             <h2>Type something...</h2>
           )}
@@ -102,7 +106,7 @@ export default class App extends Component {
           <TailSpin color="#00BFFF" height={180} width={180} />)}
 
           {status === 'rejected' && (
-            <h1>{'Not found...'}</h1>
+            <h2>{'Not found...'}</h2>
           )}
 
         {status === 'resolved' && (
@@ -111,7 +115,11 @@ export default class App extends Component {
             {showBtn && <Button onClick={this.loadMore} />}
           </>
         )}
-
+        {showModal && (<Modal
+          onClose={this.toggleModal}
+          largePicture={largePicture}
+          tags={tags}
+        />)}
         <ToastContainer position="top-center" theme="colored" />
         </div>
     ) }

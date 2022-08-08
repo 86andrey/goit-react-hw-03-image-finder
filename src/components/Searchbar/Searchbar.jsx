@@ -22,12 +22,12 @@ export default class Searchbar extends Component {
     };
 
     render() {
-        const onSubmit = this.handleSubmit;
+        // const onSubmit = this.handleSubmit;
         const pictureChange = this.handleImageChange;
 
         return (
             <header className={s.searchbar} >
-                <form className={s.form} onSubmit={onSubmit}>
+                <form className={s.form} onSubmit={this.handleSubmit}>
                     <button type="submit" className={s.button}>
                         <span className={s.buttonLable}>Search</span>
                     </button>
@@ -37,6 +37,8 @@ export default class Searchbar extends Component {
                         type="text"
                         autoComplete="off"
                         autoFocus
+                        name="searchRequest"
+                        value={this.state.imageSearch}
                         placeholder="Search images and photos"
                         onChange={pictureChange}
                     />
