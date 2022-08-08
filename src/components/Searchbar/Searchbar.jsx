@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import s from './Searchbar.module.css';
 import { toast } from 'react-toastify';
+import { BsSearch } from 'react-icons/bs';
 import PropTypes from 'prop-types';
 
 export default class Searchbar extends Component {
@@ -34,7 +35,7 @@ export default class Searchbar extends Component {
             <header className={s.searchbar} >
                 <form className={s.form} onSubmit={onSubmit}>
                     <button type="submit" className={s.button}>
-                        <span className={s.buttonLable}>Search</span>
+                        <BsSearch size={20} />
                     </button>
 
                     <input

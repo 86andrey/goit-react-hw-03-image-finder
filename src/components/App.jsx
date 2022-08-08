@@ -39,7 +39,8 @@ export default class App extends Component {
       try {
         this.setState({ status: 'pending' });
          
-        const imagesData =  await ImageAPI.fetchImage(nextImage, nextPage);
+        const imagesData = await ImageAPI.fetchImage(nextImage, nextPage);
+        
         this.setState({
           status: 'resolved',
           showBtn: true,
