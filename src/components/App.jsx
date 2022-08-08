@@ -40,37 +40,26 @@ export default class App extends Component {
         this.setState({ status: 'pending' });
          
         const imagesData = await ImageAPI.fetchImage(nextImage, nextPage);
-        
-        this.setState({
+
+        this.setState(prevState => ({
+          images: nextPage === 1 ? imagesData.hits : [...prevState.images, ...imagesData.hits],
           status: 'resolved',
           showBtn: true,
-        });
-       
-            if (nextPage === 1) {
-              this.setState({
-                images: imagesData.hits,
-                
-              });
-            } else {
-              this.setState({
-                images: [...prevState.images, ...imagesData.hits ],
-              });
-            }
-    
+        }))
+            
             if (imagesData.total === 0) {
               this.setState({
                 status: 'rejected',
                 images: [],
                 showBtn: false
               });
-        }
+            }
         
             if (imagesData.total > 0 && imagesData.hits.length < 12) {
               this.setState({                
                 showBtn: false,
               });
-        }          
-        
+             }                  
       } catch (error) {
         this.setState({ error, status: 'rejected' })
       }
