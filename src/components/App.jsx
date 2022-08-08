@@ -1,6 +1,6 @@
 import { Component } from "react";
 import Searchbar from "./Searchbar";
-import imageAPI from '../services/image-api'
+import ImageAPI from '../services/image-api'
 import ImageGallery from "./ImageGallery";
 import Button from "./Button";
 import Modal from "./Modal";
@@ -34,7 +34,7 @@ export default class App extends Component {
 
     if (prevImage !== nextImage || prevPage !== nextPage) {
       this.setState({ status: 'pending' })
-      imageAPI.fetchImage(nextImage, prevPage)
+      ImageAPI.fetchImage(nextImage, nextPage)
         .then(images => {
           this.setState({
             images,
@@ -53,7 +53,7 @@ export default class App extends Component {
           }
           else {
             this.setState({
-              images: [...this.state.images, ...images.hits],
+              // images: [...this.state.images, ...images],
               status: 'resolved',
               showBtn: true,
             })
