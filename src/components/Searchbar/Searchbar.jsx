@@ -22,12 +22,12 @@ export default class Searchbar extends Component {
     };
 
     render() {
-        // const onSubmit = this.handleSubmit;
+        const onSubmit = this.handleSubmit;
         const pictureChange = this.handleImageChange;
 
         return (
             <header className={s.searchbar} >
-                <form className={s.form} onSubmit={this.handleSubmit}>
+                <form className={s.form} onSubmit={onSubmit}>
                     <button type="submit" className={s.button}>
                         <span className={s.buttonLable}>Search</span>
                     </button>
