@@ -24,6 +24,12 @@ export default class App extends Component {
     showBtn: false,
   };
   
+  loadMore = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
+  };
+
   async componentDidUpdate(_, prevState) {
     const prevImage = prevState.imageSearch;
     const nextImage = this.state.imageSearch;
@@ -32,52 +38,45 @@ export default class App extends Component {
 
     if (prevImage !== nextImage || prevPage !== nextPage) {
       try {
-        this.setState({ status: 'pending' })
-        ImageAPI.fetchImage(nextImage, nextPage)
-          .then(imagesData => {
-            console.log(imagesData)
+        this.setState({ status: 'pending' });
+         
+        const imagesData =  await ImageAPI.fetchImage(nextImage, nextPage);
+        this.setState({
+          status: 'resolved',
+          showBtn: true,
+        });
+       
             if (nextPage === 1) {
               this.setState({
-                images: [...imagesData.hits],
-                status: 'resolved',
-                showBtn: true,
+                images: imagesData.hits,
+                
               });
             } else {
               this.setState({
-                status: 'resolved',
-                showBtn: true,
-                images: [...prevState.images, ...imagesData.hits],
+                images: [...prevState.images, ...imagesData.hits ],
               });
             }
     
             if (imagesData.total === 0) {
-              this.setState({ status: 'rejected', images: [], showBtn: false });
-            }
-            if (imagesData.total > 0 && imagesData.hits.length < 12) {
               this.setState({
-                // images: [...this.state.images, ...imagesData.hits],
-                status: 'resolved',
+                status: 'rejected',
+                images: [],
+                showBtn: false
+              });
+        }
+        
+            if (imagesData.total > 0 && imagesData.hits.length < 12) {
+              this.setState({                
                 showBtn: false,
               });
-            }
-          
-            // this.setState({
-            //   status: 'resolved',
-            //   showBtn: true,
-            // })
-          })
+        }          
+        
       } catch (error) {
         this.setState({ error, status: 'rejected' })
       }
     }
   }
   
-  loadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
-  };
-
   handleFormSubmit = imageSearch => {
     this.setState({
       imageSearch,
@@ -99,14 +98,14 @@ export default class App extends Component {
         <Searchbar onSubmit={this.handleFormSubmit} />
 
           {status === 'idle' && (
-            <h2>Type something...</h2>
+            <h2 className={s.h2}>Type something...</h2>
           )}
 
         {status === 'pending' && (
           <TailSpin color="#00BFFF" height={180} width={180} />)}
 
           {status === 'rejected' && (
-            <h2>{'Not found...'}</h2>
+            <h2 className={s.h2}>{'Not found...'}</h2>
           )}
 
         {status === 'resolved' && (
