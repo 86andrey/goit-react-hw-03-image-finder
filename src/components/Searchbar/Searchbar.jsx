@@ -1,8 +1,13 @@
 import React, { Component } from "react";
 import s from './Searchbar.module.css';
 import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
 
 export default class Searchbar extends Component {
+    static propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+    };
+    
     state = {
         imageSearch: '',
     };

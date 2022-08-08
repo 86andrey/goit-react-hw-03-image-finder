@@ -4,10 +4,9 @@ import ImageAPI from '../services/image-api'
 import ImageGallery from "./ImageGallery";
 import Button from "./Button";
 import Modal from "./Modal";
-import { TailSpin } from 'react-loader-spinner';
-
 import s from './App.module.css';
 import { ToastContainer } from 'react-toastify';
+import Loader from "./Loader";
 
 
 
@@ -102,7 +101,7 @@ export default class App extends Component {
           )}
 
         {status === 'pending' && (
-          <TailSpin color="#00BFFF" height={180} width={180} />)}
+          <Loader />)}
 
           {status === 'rejected' && (
             <h2 className={s.h2}>{'Not found...'}</h2>
